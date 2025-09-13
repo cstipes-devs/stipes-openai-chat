@@ -1,0 +1,108 @@
+openapi: 3.1.0
+info:
+  title: Stipes OpenAI Chat API
+  version: 1.0.0
+  description: |
+    Minimal HTTP API exposing health, embedded files, and a chat endpoint backed by OpenAI Responses API.
+servers:
+  - url: http://localhost:8080
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      operationId: healthz
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                required: [ok]
+              example: { ok: true }
+
+  /files:
+    get:
+      summary: List embedded files
+      operationId: listFiles
+      responses:
+        '200':
+          description: Map of filename to content or binary note
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilesResponse'
+              examples:
+                sample:
+                  value:
+                    files:
+                      stipes.md: "# Chris Stipes\n..."
+                      Christopher_Stipes_Resume_20250911.pdf: "[binary file loaded: Christopher_Stipes_Resume_20250911.pdf, 77662 bytes]"
+
+  /chat:
+    post:
+      summary: Chat with the assistant
+      operationId: chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+            example:
+              message: "Write a short bio of Chris"
+      responses:
+        '200':
+          description: Assistant response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+              example:
+                output: "Chris is a software engineer..."
+        '400':
+          description: Invalid JSON
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: "invalid json: unexpected EOF"
+        '502':
+          description: Downstream OpenAI error
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: "openai error: OPENAI_API_KEY is not set"
+        '405':
+          description: Method not allowed
+
+components:
+  schemas:
+    ChatRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          minLength: 1
+      required: [message]
+
+    ChatResponse:
+      type: object
+      properties:
+        output:
+          type: string
+      required: [output]
+
+    FilesResponse:
+      type: object
+      properties:
+        files:
+          type: object
+          additionalProperties:
+            type: string
+      required: [files]
+
