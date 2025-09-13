@@ -40,7 +40,7 @@ paths:
                   value:
                     files:
                       stipes.md: "# Chris Stipes\n..."
-                      Christopher_Stipes_Resume_20250911.pdf: "[binary file loaded: Christopher_Stipes_Resume_20250911.pdf, 77662 bytes]"
+                      resume.md: "# Resume\nSkills: Go, APIs, OpenAI\n..."
 
   /chat:
     post:
@@ -105,4 +105,3 @@ components:
           additionalProperties:
             type: string
       required: [files]
-

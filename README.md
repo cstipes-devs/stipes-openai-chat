@@ -7,7 +7,7 @@ A tiny Go service that:
 
 > Files included:
 > - `assets/stipes.md`
-> - `assets/Christopher_Stipes_Resume_20250911.pdf`
+> - `assets/resume.md`
 
 ## Prereqs
 - Go 1.22+
@@ -52,5 +52,5 @@ Response:
 ```
 
 ## Notes
-- PDF is loaded but not parsed; the service passes a note with byte length so the model knows it exists.
+- Binary files are summarized with a short note; prefer `.md` or `.txt` for contextual content.
 - `handleChat` truncates very long files to keep request size reasonable.

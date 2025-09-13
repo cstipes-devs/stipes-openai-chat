@@ -15,8 +15,8 @@ func TestFilesHandler_ReturnsInjectedMap(t *testing.T) {
     mux := http.NewServeMux()
 
     files := map[string]string{
-        "stipes.md":                           "hello world",
-        "Christopher_Stipes_Resume_20250911.pdf": "[binary file loaded: Christopher_Stipes_Resume_20250911.pdf, 77662 bytes]",
+        "stipes.md":  "hello world",
+        "resume.md":  "# Chris Stipes\nSoftware engineer...",
     }
 
     Register(mux, Deps{

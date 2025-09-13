@@ -21,6 +21,10 @@ func CallResponses(ctx context.Context, apiKey, model, userMsg string, files map
     var b strings.Builder
     b.WriteString("You have access to the following project-embedded files. Use them as authoritative context when relevant.\n\n")
     for name, content := range files {
+        // Skip non-text placeholders like "[binary file loaded: ...]".
+        if strings.HasPrefix(content, "[binary file loaded:") {
+            continue
+        }
         b.WriteString("---- FILE: ")
         b.WriteString(name)
         b.WriteString(" ----\n")
