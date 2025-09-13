@@ -8,6 +8,7 @@ import (
     "net/http"
     "time"
 
+    "github.com/chris-stipes/stipes-openai-chat/internal/models"
     ai "github.com/chris-stipes/stipes-openai-chat/internal/openai"
 )
 
@@ -15,14 +16,6 @@ type Deps struct {
     Files map[string]string
     APIKey string
     Model  string
-}
-
-type chatRequest struct {
-    Message string `json:"message"`
-}
-
-type chatResponse struct {
-    Output string `json:"output"`
 }
 
 // Register wires up all HTTP routes on the provided mux.
@@ -43,7 +36,7 @@ func Register(mux *http.ServeMux, d Deps) {
             w.WriteHeader(http.StatusMethodNotAllowed)
             return
         }
-        var req chatRequest
+        var req models.ChatRequest
         if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
             w.WriteHeader(http.StatusBadRequest)
             fmt.Fprintf(w, "invalid json: %v", err)
@@ -59,7 +52,6 @@ func Register(mux *http.ServeMux, d Deps) {
             return
         }
         w.Header().Set("Content-Type", "application/json")
-        json.NewEncoder(w).Encode(chatResponse{Output: out})
+        json.NewEncoder(w).Encode(models.ChatResponse{Output: out})
     })
 }
-
