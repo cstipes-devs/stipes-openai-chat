@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
     "encoding/json"
@@ -14,4 +14,3 @@ func Handler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(map[string]any{"files": files})
 }
-
