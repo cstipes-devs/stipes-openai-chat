@@ -8,7 +8,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/chris-stipes/stipes-openai-chat/internal/config"
 	embedded "github.com/chris-stipes/stipes-openai-chat/internal/embedded"
 	"github.com/chris-stipes/stipes-openai-chat/internal/models"
 	ai "github.com/chris-stipes/stipes-openai-chat/internal/openai"
@@ -32,7 +31,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 60*time.Second)
 	defer cancel()
 
-	out, err := ai.CallResponses(ctx, os.Getenv("OPENAI_API_KEY"), config.Get("OPENAI_MODEL", "gpt-4o-mini"), req.Message, files)
+	out, err := ai.CallResponses(ctx, os.Getenv("OPENAI_API_KEY"), "gpt-4o-mini", req.Message, files)
 	if err != nil {
 		w.WriteHeader(http.StatusBadGateway)
 		fmt.Fprintf(w, "openai error: %v", err)
