@@ -59,4 +59,3 @@ func TestFilesMap_LoadsAssetsAndFormats(t *testing.T) {
         }
     }
 }
-

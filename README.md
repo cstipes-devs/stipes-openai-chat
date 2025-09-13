@@ -6,8 +6,8 @@ A tiny Go service that:
 - Exposes `POST /chat` which calls the **OpenAI Responses API** and includes the embedded file contents as context
 
 > Files included:
-> - `assets/stipes.md`
-> - `assets/resume.md`
+> - `internal/embedded/assets/stipes.md`
+> - `internal/embedded/assets/resume.md`
 
 ## Prereqs
 - Go 1.22+

@@ -71,3 +71,4 @@ Engineering leader with 12+ years of experience across backend, platform, QA, an
 
 ## EDUCATION
 **University of Alabama** – B.A., 2007
+

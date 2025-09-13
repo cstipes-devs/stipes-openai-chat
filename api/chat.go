@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"context"
@@ -8,8 +8,8 @@ import (
 	"os"
 	"time"
 
-	embedded "github.com/chris-stipes/stipes-openai-chat"
 	"github.com/chris-stipes/stipes-openai-chat/internal/config"
+	embedded "github.com/chris-stipes/stipes-openai-chat/internal/embedded"
 	"github.com/chris-stipes/stipes-openai-chat/internal/models"
 	ai "github.com/chris-stipes/stipes-openai-chat/internal/openai"
 )
@@ -40,8 +40,5 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(models.ChatResponse{Output: out})
-	if err != nil {
-		return
-	}
+	_ = json.NewEncoder(w).Encode(models.ChatResponse{Output: out})
 }
