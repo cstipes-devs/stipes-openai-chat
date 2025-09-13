@@ -16,7 +16,6 @@ import (
 
 var files = embedded.FilesMap()
 
-// Handler is a Vercel Serverless Function entrypoint for POST /api/chat
 func Handler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
