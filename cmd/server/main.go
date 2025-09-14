@@ -1,12 +1,12 @@
-package handler
+package main
 
 import (
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/chris-stipes/stipes-openai-chat/internal/config"
-	embedded "github.com/chris-stipes/stipes-openai-chat/internal/embedded"
+	"github.com/chris-stipes/stipes-openai-chat/pkg/config"
+	embedded "github.com/chris-stipes/stipes-openai-chat/pkg/embedded"
 	"github.com/chris-stipes/stipes-openai-chat/internal/handlers"
 	"github.com/chris-stipes/stipes-openai-chat/internal/middleware"
 )

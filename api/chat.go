@@ -8,10 +8,10 @@ import (
     "os"
     "time"
 
-    embedded "github.com/chris-stipes/stipes-openai-chat/internal/embedded"
-    "github.com/chris-stipes/stipes-openai-chat/internal/config"
-    "github.com/chris-stipes/stipes-openai-chat/internal/models"
-    ai "github.com/chris-stipes/stipes-openai-chat/internal/openai"
+    embedded "github.com/chris-stipes/stipes-openai-chat/pkg/embedded"
+    "github.com/chris-stipes/stipes-openai-chat/pkg/config"
+    "github.com/chris-stipes/stipes-openai-chat/pkg/models"
+    ai "github.com/chris-stipes/stipes-openai-chat/pkg/openai"
 )
 
 var files = embedded.FilesMap()
@@ -44,4 +44,3 @@ func Handler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
     _ = json.NewEncoder(w).Encode(models.ChatResponse{Output: out})
 }
-

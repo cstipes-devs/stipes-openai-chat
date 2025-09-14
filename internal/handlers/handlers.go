@@ -8,8 +8,8 @@ import (
     "net/http"
     "time"
 
-    "github.com/chris-stipes/stipes-openai-chat/internal/models"
-    ai "github.com/chris-stipes/stipes-openai-chat/internal/openai"
+    "github.com/chris-stipes/stipes-openai-chat/pkg/models"
+    ai "github.com/chris-stipes/stipes-openai-chat/pkg/openai"
 )
 
 type Deps struct {
