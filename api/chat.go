@@ -18,7 +18,7 @@ import (
 	"github.com/openai/openai-go/v2/shared"
 )
 
-//go:embed assets/*
+//go:embed ../assets/*
 var FS embed.FS
 
 var files = FilesMap()
