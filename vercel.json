@@ -4,12 +4,6 @@
       "includeFiles": "api/assets/**"
     }
   },
-  "builds": [
-    {
-      "src": "api/chat.go",
-      "use": "@vercel/go"
-    }
-  ],
   "routes": [
     {
       "src": "/(.*)",
