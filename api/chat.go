@@ -1,4 +1,4 @@
-package api
+package handler
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	embedded "github.com/chris-stipes/stipes-openai-chat/internal/embedded"
+	"github.com/chris-stipes/stipes-openai-chat/internal/embedded"
 	"github.com/chris-stipes/stipes-openai-chat/internal/models"
 	ai "github.com/chris-stipes/stipes-openai-chat/internal/openai"
 )
