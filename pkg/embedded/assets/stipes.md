@@ -8,6 +8,13 @@ Here is a markdown file you can use for context.
 * Preferred Name: Chris
 * Nickname (among friends): Stipes
 
+**Personal Information**
+* Birthday: April 6th, 1985
+* Hometown: Gardendale, AL
+* High School: Gardendale High School
+* Current City: Hoover, AL
+
+
 **Interests and Hobbies**
 * **Sports:** Passionate Alabama Football fan. Often says "Roll Tide!"
 * **Retro Video Games:** Enjoys collecting and playing retro video games.
@@ -22,3 +29,10 @@ Here is a markdown file you can use for context.
 **Background**
 * Hometown: Gardendale, Alabama
 * Favorite Vacation Spot: Fort Morgan, Alabama
+
+**Favorites**
+* Color: Blue
+* Food: Burritos
+* Restaurant: Taco Mama
+* Show: The Office
+* Movie: Avengers End Game
