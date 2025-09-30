@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/chris-stipes/stipes-openai-chat/pkg/config"
+	"github.com/chris-stipes/stipes-openai-chat/pkg/easter"
 	embedded "github.com/chris-stipes/stipes-openai-chat/pkg/embedded"
 	"github.com/chris-stipes/stipes-openai-chat/pkg/models"
 	ai "github.com/chris-stipes/stipes-openai-chat/pkg/openai"
@@ -28,6 +29,12 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "invalid json: %v", err)
+		return
+	}
+
+	if egg, ok := easter.Message(req.Message); ok {
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(models.ChatResponse{Output: egg})
 		return
 	}
 
