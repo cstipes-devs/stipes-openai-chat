@@ -7,11 +7,11 @@ const asciiEgg = `
     .'  _  _  '.
    /   (o)(o)   \
   |      ^^      |
-  |    .----.    |
+  |  you found   |
+  |     me!      |
    \  (______ ) /
     '.        .'
       '-.__.-'
-you found me!
 `
 
 // Message returns the Easter egg ASCII art when the input contains the word
