@@ -20,7 +20,15 @@ Here is a markdown file you can use for context.
 * **Retro Video Games:** Enjoys collecting and playing retro video games.
     * **Systems Owned:** PS1, SNES, Genesis, Dreamcast, Xbox, NES, Wii, GameCube.
 * **Cars:** Enthusiast and owner of classic and modern vehicles.
-    * **Vehicles Owned:** Blue 1972 Corvette, Blue 2022 Ford Bronco.
+    * **Vehicles Owned:** 
+    * Blue 1972 Corvette
+      * Engine is 350 cubic inch v8
+      * automatic transmission
+    * Blue 2022 Ford Bronco
+      * 4 door
+      * soft top
+      * turbo v6 engine
+      * Outerbanks trim
 
 **Family**
 * Wife: Katie (a veterinarian)
