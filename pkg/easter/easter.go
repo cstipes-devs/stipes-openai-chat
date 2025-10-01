@@ -2,18 +2,7 @@ package easter
 
 import "strings"
 
-const (
-	asciiArt = `      .-""""-.
-    .'  _  _  '.
-   /   (o)(o)   \
-  |      ^^      |
-  |  you found   |
-  |     me!      |
-   \  (______ ) /
-    '.        .'
-      '-.__.-'`
-	asciiEgg = "```text\n" + asciiArt + "\n```"
-)
+const asciiEgg = "♫♪.ılılıll|̲̅̅●̲̅̅|̲̅̅=̲̅̅|̲̅̅●̲̅̅|llılılı.♫- Dookie by Green Day"
 
 // Message returns the Easter egg ASCII art when the input contains the word
 // "easter" (case-insensitive). The boolean indicates whether the Easter egg
