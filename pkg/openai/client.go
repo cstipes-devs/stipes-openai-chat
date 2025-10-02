@@ -10,6 +10,11 @@ import (
 	"github.com/openai/openai-go/v2/responses"
 )
 
+var sendResponse = func(ctx context.Context, apiKey string, params responses.ResponseNewParams) (*responses.Response, error) {
+	client := sdk.NewClient(option.WithAPIKey(apiKey))
+	return client.Responses.New(ctx, params)
+}
+
 // CallResponses invokes the OpenAI Responses API via the official SDK and returns output text.
 func CallResponses(ctx context.Context, apiKey, model, userMsg string, files map[string]string) (string, error) {
 	if apiKey == "" {
@@ -38,8 +43,6 @@ func CallResponses(ctx context.Context, apiKey, model, userMsg string, files map
 	}
 	contextBlock := b.String()
 
-	client := sdk.NewClient(option.WithAPIKey(apiKey))
-
 	// Compose input as messages: system instructions, context, then user question.
 	input := responses.ResponseInputParam{
 		// High-level style instruction
@@ -56,7 +59,7 @@ func CallResponses(ctx context.Context, apiKey, model, userMsg string, files map
 		),
 	}
 
-	resp, err := client.Responses.New(ctx, responses.ResponseNewParams{
+	resp, err := sendResponse(ctx, apiKey, responses.ResponseNewParams{
 		Model: model,
 		Input: responses.ResponseNewParamsInputUnion{OfInputItemList: input},
 		Text:  responses.ResponseTextConfigParam{},
