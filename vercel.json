@@ -6,6 +6,14 @@
   },
   "routes": [
     {
+      "src": "/api/healthz",
+      "dest": "/api/healthz/index.go"
+    },
+    {
+      "src": "/api/files",
+      "dest": "/api/files/index.go"
+    },
+    {
       "src": "/(.*)",
       "dest": "/api/chat.go"
     }
