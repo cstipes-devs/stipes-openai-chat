@@ -4,12 +4,19 @@ info:
   version: 1.0.0
   description: |
     Minimal HTTP API exposing health, embedded files, and a chat endpoint backed by OpenAI Responses API.
+
+    Deployment note: on Vercel the same contract is served under the /api prefix
+    (/api/healthz, /api/files, /api/chat); unmatched paths fall through to the chat
+    function. The Vercel chat function prepends a formatting instruction to the
+    message before calling OpenAI, so outputs can differ from the standalone server.
 servers:
   - url: http://localhost:8080
+    description: Standalone server (go run ./cmd/server)
 paths:
   /healthz:
     get:
       summary: Health check
+      description: Method is not enforced; any HTTP method returns the same 200 response.
       operationId: healthz
       responses:
         '200':
@@ -27,6 +34,7 @@ paths:
   /files:
     get:
       summary: List embedded files
+      description: Method is not enforced; any HTTP method returns the same 200 response.
       operationId: listFiles
       responses:
         '200':
@@ -78,7 +86,7 @@ paths:
                 type: string
               example: "openai error: OPENAI_API_KEY is not set"
         '405':
-          description: Method not allowed
+          description: Method not allowed (non-POST). Empty body.
 
 components:
   schemas:
@@ -88,6 +96,9 @@ components:
         message:
           type: string
           minLength: 1
+          description: |
+            minLength is documented intent only — the server currently accepts
+            empty or missing messages. Unknown request fields are silently ignored.
       required: [message]
 
     ChatResponse:

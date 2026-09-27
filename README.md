@@ -29,11 +29,13 @@ go run ./cmd/server
 ```
 GET /healthz
 ```
+Returns `200` `application/json` with body `{"ok":true}`. The method is not enforced; any method returns the same response.
 
 ### List loaded files
 ```
 GET /files
 ```
+Returns `200` `application/json` with body `{"files":{"<name>":"<content>"}}`. The method is not enforced; any method returns the same response.
 
 ### Chat
 ```
@@ -51,6 +53,13 @@ Response:
 }
 ```
 
+Error responses (note these are **not** JSON):
+- `405` — non-POST method; empty body.
+- `400` — malformed JSON; `text/plain` body `invalid json: <details>`.
+- `502` — upstream OpenAI failure; `text/plain` body `openai error: <details>`.
+
+Clients should check the status code before calling `res.json()`.
+
 ## Notes
 - Binary files are summarized with a short note; prefer `.md` or `.txt` for contextual content.
 - `handleChat` truncates very long files to keep request size reasonable.
@@ -65,6 +74,8 @@ You can deploy this repo to Vercel in two ways. Choose one approach per project 
   - `GET /api/healthz`
   - `GET /api/files`
   - `POST /api/chat`
+- Routing: `vercel.json` maps `/api/healthz` and `/api/files` to their functions; any other path falls through to the chat function.
+- Behavior difference: the Vercel chat function prepends a formatting instruction to `message` before calling OpenAI, so outputs can differ from the standalone server for the same input.
 - Env vars (set in Vercel Project Settings → Environment Variables):
   - `OPENAI_API_KEY` (required)
   - `OPENAI_MODEL` (optional, default `gpt-4o-mini`)
@@ -78,7 +89,7 @@ You can deploy this repo to Vercel in two ways. Choose one approach per project 
   ```
 
 ### Container (Docker)
-- Uses root `Dockerfile`. The app listens on `:$PORT` if set (Vercel sets this), otherwise `ADDR`.
+- Uses root `Dockerfile` (not currently committed — add one to use this path). The app listens on `:$PORT` if set (Vercel sets this), otherwise `ADDR`.
 - Endpoints:
   - `GET /healthz`
   - `GET /files`
