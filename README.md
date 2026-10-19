@@ -3,21 +3,21 @@
 A tiny Go service that:
 - Embeds local context files using `go:embed`
 - Loads them into memory on startup
-- Exposes `POST /chat` which calls the **OpenAI Responses API** and includes the embedded file contents as context
+- Exposes `POST /chat` which calls the **Claude Messages API** and includes the embedded file contents as context
 
 > Files included:
 > - `pkg/embedded/assets/stipes.md`
 > - `pkg/embedded/assets/resume.md`
 
 ## Prereqs
-- Go 1.22+
-- An OpenAI API key
+- Go 1.24+
+- An Anthropic API key
 
 ## Run
 ```bash
-export OPENAI_API_KEY=sk-...        # required
-export OPENAI_MODEL=gpt-4o-mini     # optional (defaults to gpt-4o-mini)
-export ADDR=:8080                   # optional
+export ANTHROPIC_API_KEY=sk-ant-...  # required
+export ANTHROPIC_MODEL=claude-opus-5-5  # optional (defaults to claude-opus-5-5)
+export ADDR=:8080                      # optional
 
 # from repo root
 go run ./cmd/server
@@ -56,9 +56,21 @@ Response:
 Error responses (note these are **not** JSON):
 - `405` — non-POST method; empty body.
 - `400` — malformed JSON; `text/plain` body `invalid json: <details>`.
-- `502` — upstream OpenAI failure; `text/plain` body `openai error: <details>`.
+- `502` — upstream Claude API failure; `text/plain` body `upstream error: <details>`.
 
 Clients should check the status code before calling `res.json()`.
+
+## Tests
+```bash
+go test ./...   # unit tests; no network, safe for CI
+```
+
+An integration test calls the real Claude API through the `/chat` handler. It is behind the
+`integration` build tag, so `go test ./...` never runs it, and it skips when `ANTHROPIC_API_KEY`
+is unset. Run it locally to verify the end-to-end setup (each run costs a few cents):
+```bash
+ANTHROPIC_API_KEY=sk-ant-... go test -tags=integration -count=1 -v ./internal/handlers/ -run Integration
+```
 
 ## Notes
 - Binary files are summarized with a short note; prefer `.md` or `.txt` for contextual content.
@@ -75,10 +87,10 @@ You can deploy this repo to Vercel in two ways. Choose one approach per project 
   - `GET /api/files`
   - `POST /api/chat`
 - Routing: `vercel.json` maps `/api/healthz` and `/api/files` to their functions; any other path falls through to the chat function.
-- Behavior difference: the Vercel chat function prepends a formatting instruction to `message` before calling OpenAI, so outputs can differ from the standalone server for the same input.
+- Behavior difference: the Vercel chat function prepends a formatting instruction to `message` before calling Claude, so outputs can differ from the standalone server for the same input.
 - Env vars (set in Vercel Project Settings → Environment Variables):
-  - `OPENAI_API_KEY` (required)
-  - `OPENAI_MODEL` (optional, default `gpt-4o-mini`)
+  - `ANTHROPIC_API_KEY` (required)
+  - `ANTHROPIC_MODEL` (optional, default `claude-opus-5-5`)
 - Example:
   ```bash
   curl -s http://localhost:3000/api/healthz
@@ -95,12 +107,12 @@ You can deploy this repo to Vercel in two ways. Choose one approach per project 
   - `GET /files`
   - `POST /chat`
 - Env vars:
-  - `OPENAI_API_KEY` (required)
-  - `OPENAI_MODEL` (optional)
+  - `ANTHROPIC_API_KEY` (required)
+  - `ANTHROPIC_MODEL` (optional)
   - `ADDR` (optional; ignored if `PORT` is set by the platform)
 - Local test:
   ```bash
   docker build -t stipes-openai-chat .
-  docker run -e OPENAI_API_KEY=sk-... -p 8080:8080 stipes-openai-chat
+  docker run -e ANTHROPIC_API_KEY=sk-ant-... -p 8080:8080 stipes-openai-chat
   curl -s localhost:8080/healthz
   ```

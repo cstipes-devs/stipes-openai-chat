@@ -8,16 +8,16 @@ import (
 	"os"
 	"time"
 
+	ai "github.com/chris-stipes/stipes-openai-chat/pkg/claude"
 	"github.com/chris-stipes/stipes-openai-chat/pkg/config"
 	"github.com/chris-stipes/stipes-openai-chat/pkg/easter"
 	embedded "github.com/chris-stipes/stipes-openai-chat/pkg/embedded"
 	"github.com/chris-stipes/stipes-openai-chat/pkg/models"
-	ai "github.com/chris-stipes/stipes-openai-chat/pkg/openai"
 )
 
 var files = embedded.FilesMap()
 
-var callResponses = ai.CallResponses
+var callMessages = ai.CallMessages
 
 // Handler implements a Vercel Go Serverless Function for /api/chat
 // See: https://vercel.com/docs/functions/runtimes/go
@@ -46,10 +46,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 60*time.Second)
 	defer cancel()
 
-	out, err := callResponses(ctx, os.Getenv("OPENAI_API_KEY"), config.Get("OPENAI_MODEL", "gpt-4o-mini"), req.Message, files)
+	out, err := callMessages(ctx, os.Getenv("ANTHROPIC_API_KEY"), config.Get("ANTHROPIC_MODEL", ai.DefaultModel), req.Message, files)
 	if err != nil {
 		w.WriteHeader(http.StatusBadGateway)
-		fmt.Fprintf(w, "openai error: %v", err)
+		fmt.Fprintf(w, "upstream error: %v", err)
 		return
 	}
 

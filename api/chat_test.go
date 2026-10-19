@@ -9,17 +9,18 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	ai "github.com/chris-stipes/stipes-openai-chat/pkg/claude"
 	"github.com/chris-stipes/stipes-openai-chat/pkg/easter"
 )
 
-func stubCallResponses(t *testing.T, fn func(context.Context, string, string, string, map[string]string) (string, error)) func() {
+func stubCallMessages(t *testing.T, fn func(context.Context, string, string, string, map[string]string) (string, error)) func() {
 	t.Helper()
-	prev := callResponses
-	callResponses = func(ctx context.Context, apiKey, model, userMsg string, files map[string]string) (string, error) {
+	prev := callMessages
+	callMessages = func(ctx context.Context, apiKey, model, userMsg string, files map[string]string) (string, error) {
 		return fn(ctx, apiKey, model, userMsg, files)
 	}
 	return func() {
-		callResponses = prev
+		callMessages = prev
 	}
 }
 
@@ -58,8 +59,8 @@ func TestHandler_InvalidJSON(t *testing.T) {
 
 func TestHandler_EasterEgg(t *testing.T) {
 	defer withFiles(map[string]string{"readme.md": "content"})()
-	restore := stubCallResponses(t, func(context.Context, string, string, string, map[string]string) (string, error) {
-		t.Fatalf("callResponses should not be invoked when Easter egg triggers")
+	restore := stubCallMessages(t, func(context.Context, string, string, string, map[string]string) (string, error) {
+		t.Fatalf("callMessages should not be invoked when Easter egg triggers")
 		return "", nil
 	})
 	defer restore()
@@ -92,7 +93,7 @@ func TestHandler_EasterEgg(t *testing.T) {
 
 func TestHandler_Success(t *testing.T) {
 	defer withFiles(map[string]string{"readme.md": "context"})()
-	t.Setenv("OPENAI_API_KEY", "test-key")
+	t.Setenv("ANTHROPIC_API_KEY", "test-key")
 
 	var received struct {
 		apiKey string
@@ -101,7 +102,7 @@ func TestHandler_Success(t *testing.T) {
 		files  map[string]string
 	}
 
-	restore := stubCallResponses(t, func(ctx context.Context, apiKey, model, msg string, f map[string]string) (string, error) {
+	restore := stubCallMessages(t, func(ctx context.Context, apiKey, model, msg string, f map[string]string) (string, error) {
 		received = struct {
 			apiKey string
 			model  string
@@ -128,8 +129,8 @@ func TestHandler_Success(t *testing.T) {
 	if received.apiKey != "test-key" {
 		t.Fatalf("api key = %q, want test-key", received.apiKey)
 	}
-	if received.model != "gpt-4o-mini" {
-		t.Fatalf("model = %q, want gpt-4o-mini", received.model)
+	if received.model != ai.DefaultModel {
+		t.Fatalf("model = %q, want %s", received.model, ai.DefaultModel)
 	}
 	if want := "Format any responses to the question that have lists in human readable bullet points: Hello"; received.msg != want {
 		t.Fatalf("message = %q, want %q", received.msg, want)
@@ -149,11 +150,11 @@ func TestHandler_Success(t *testing.T) {
 	}
 }
 
-func TestHandler_OpenAIError(t *testing.T) {
+func TestHandler_UpstreamError(t *testing.T) {
 	defer withFiles(map[string]string{"readme.md": "context"})()
-	t.Setenv("OPENAI_API_KEY", "test-key")
+	t.Setenv("ANTHROPIC_API_KEY", "test-key")
 
-	restore := stubCallResponses(t, func(context.Context, string, string, string, map[string]string) (string, error) {
+	restore := stubCallMessages(t, func(context.Context, string, string, string, map[string]string) (string, error) {
 		return "", errors.New("boom")
 	})
 	defer restore()

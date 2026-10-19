@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"time"
 
+	ai "github.com/chris-stipes/stipes-openai-chat/pkg/claude"
 	"github.com/chris-stipes/stipes-openai-chat/pkg/easter"
 	"github.com/chris-stipes/stipes-openai-chat/pkg/models"
-	ai "github.com/chris-stipes/stipes-openai-chat/pkg/openai"
 )
 
 type Deps struct {
@@ -52,10 +52,10 @@ func Register(mux *http.ServeMux, d Deps) {
 		ctx, cancel := context.WithTimeout(r.Context(), 60*time.Second)
 		defer cancel()
 
-		out, err := ai.CallResponses(ctx, d.APIKey, d.Model, req.Message, d.Files)
+		out, err := ai.CallMessages(ctx, d.APIKey, d.Model, req.Message, d.Files)
 		if err != nil {
 			w.WriteHeader(http.StatusBadGateway)
-			fmt.Fprintf(w, "openai error: %v", err)
+			fmt.Fprintf(w, "upstream error: %v", err)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")

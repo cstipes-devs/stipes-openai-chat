@@ -24,7 +24,7 @@ func TestFilesHandler_ReturnsInjectedMap(t *testing.T) {
 	Register(mux, Deps{
 		Files:  files,
 		APIKey: "test-key",
-		Model:  "gpt-4o-mini",
+		Model:  "claude-test",
 	})
 
 	req := httptest.NewRequest(http.MethodGet, "/files", nil)
@@ -100,11 +100,11 @@ func TestChat_InvalidJSON(t *testing.T) {
 	}
 }
 
-func TestChat_OpenAIError(t *testing.T) {
-	// Use empty API key to force the OpenAI layer to return an error
+func TestChat_UpstreamError(t *testing.T) {
+	// Use empty API key to force the Claude layer to return an error
 	// without making any network calls.
 	mux := http.NewServeMux()
-	Register(mux, Deps{APIKey: "", Model: "gpt-4o-mini"})
+	Register(mux, Deps{APIKey: "", Model: "claude-test"})
 
 	payload := map[string]string{"message": "hello"}
 	buf, _ := json.Marshal(payload)
@@ -118,8 +118,8 @@ func TestChat_OpenAIError(t *testing.T) {
 		t.Fatalf("status = %d, want %d", rr.Code, http.StatusBadGateway)
 	}
 	body, _ := io.ReadAll(rr.Body)
-	if !strings.Contains(string(body), "openai error:") {
-		t.Errorf("expected openai error in body, got %q", string(body))
+	if !strings.Contains(string(body), "upstream error:") {
+		t.Errorf("expected upstream error in body, got %q", string(body))
 	}
 }
 
