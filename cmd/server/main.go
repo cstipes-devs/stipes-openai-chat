@@ -5,18 +5,19 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/chris-stipes/stipes-openai-chat/pkg/config"
-	embedded "github.com/chris-stipes/stipes-openai-chat/pkg/embedded"
 	"github.com/chris-stipes/stipes-openai-chat/internal/handlers"
 	"github.com/chris-stipes/stipes-openai-chat/internal/middleware"
+	"github.com/chris-stipes/stipes-openai-chat/pkg/claude"
+	"github.com/chris-stipes/stipes-openai-chat/pkg/config"
+	embedded "github.com/chris-stipes/stipes-openai-chat/pkg/embedded"
 )
 
 func main() {
 	mux := http.NewServeMux()
 	handlers.Register(mux, handlers.Deps{
 		Files:  embedded.FilesMap(),
-		APIKey: os.Getenv("OPENAI_API_KEY"),
-		Model:  config.Get("OPENAI_MODEL", "gpt-4o-mini"),
+		APIKey: os.Getenv("ANTHROPIC_API_KEY"),
+		Model:  config.Get("ANTHROPIC_MODEL", claude.DefaultModel),
 	})
 
 	// Prefer the platform-provided PORT if present (e.g., Vercel),

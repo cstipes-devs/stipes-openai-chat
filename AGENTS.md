@@ -1,16 +1,17 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- `main.go`: Single-binary HTTP service (handlers, OpenAI call, embed init).
+- `main.go`: Single-binary HTTP service (handlers, Claude call, embed init).
 - `assets/`: Embedded context files loaded at startup.
-- `.env.example`: Documented env vars (`OPENAI_API_KEY`, `OPENAI_MODEL`, `ADDR`).
+- `.env.example`: Documented env vars (`ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL`, `ADDR`).
 - `README.md`: Usage and API reference. Go module is defined in `go.mod`.
 
 ## Build, Run, and Test
-- Run locally: `go run ./cmd/server` (requires `OPENAI_API_KEY`).
+- Run locally: `go run ./cmd/server` (requires `ANTHROPIC_API_KEY`).
 - Build binary: `go build -o bin/server ./cmd/server`
 - Unit tests: `go test ./...`
 - Coverage: `go test ./... -cover`
+- Integration (real Claude API, local only; excluded from CI by build tag): `ANTHROPIC_API_KEY=... go test -tags=integration -count=1 -v ./internal/handlers/ -run Integration`
 - Health check: `curl localhost:8080/healthz`
 - Chat example:
   ```bash
@@ -29,7 +30,7 @@
 ## Testing Guidelines
 - Framework: standard `testing` package; name files `*_test.go`.
 - Test names: `TestFunction_Scenario` and table-driven where useful.
-- Cover edge cases (empty input, timeouts, OpenAI error paths). Use small fakes over network calls.
+- Cover edge cases (empty input, timeouts, Claude API error paths). Use small fakes over network calls.
 - Run `go test ./...` locally; add tests when changing handlers or request building.
 
 ## Commit & Pull Request Guidelines
@@ -40,5 +41,5 @@
 
 ## Security & Configuration Tips
 - Do not commit secrets. Load config via env or a local `.env` (untracked).
-- Required: `OPENAI_API_KEY`. Optional: `OPENAI_MODEL` (defaults `gpt-4o-mini`), `ADDR` (defaults `:8080`).
+- Required: `ANTHROPIC_API_KEY`. Optional: `ANTHROPIC_MODEL` (defaults `claude-opus-5-5`), `ADDR` (defaults `:8080`).
 - Large/binary assets are embedded but not parsed; keep them minimal to control request size.

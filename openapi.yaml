@@ -1,14 +1,14 @@
 openapi: 3.1.0
 info:
-  title: Stipes OpenAI Chat API
+  title: Stipes Claude Chat API
   version: 1.0.0
   description: |
-    Minimal HTTP API exposing health, embedded files, and a chat endpoint backed by OpenAI Responses API.
+    Minimal HTTP API exposing health, embedded files, and a chat endpoint backed by the Claude Messages API.
 
     Deployment note: on Vercel the same contract is served under the /api prefix
     (/api/healthz, /api/files, /api/chat); unmatched paths fall through to the chat
     function. The Vercel chat function prepends a formatting instruction to the
-    message before calling OpenAI, so outputs can differ from the standalone server.
+    message before calling Claude, so outputs can differ from the standalone server.
 servers:
   - url: http://localhost:8080
     description: Standalone server (go run ./cmd/server)
@@ -48,7 +48,7 @@ paths:
                   value:
                     files:
                       stipes.md: "# Chris Stipes\n..."
-                      resume.md: "# Resume\nSkills: Go, APIs, OpenAI\n..."
+                      resume.md: "# Resume\nSkills: Go, APIs, Claude\n..."
 
   /chat:
     post:
@@ -79,12 +79,12 @@ paths:
                 type: string
               example: "invalid json: unexpected EOF"
         '502':
-          description: Downstream OpenAI error
+          description: Downstream Claude API error
           content:
             text/plain:
               schema:
                 type: string
-              example: "openai error: OPENAI_API_KEY is not set"
+              example: "upstream error: ANTHROPIC_API_KEY is not set"
         '405':
           description: Method not allowed (non-POST). Empty body.
 
